@@ -1,0 +1,15 @@
+#wholeDiv{
+    width: 100%;
+}
+#leftMenuDiv{
+    width: 20%;
+    border: 1px solid black;
+    float: left;
+    box-sizing: border-box;
+}
+#gameContent{
+    width: 80%;
+    border: 1px solid black;
+    float: right;
+    box-sizing: border-box;
+}
