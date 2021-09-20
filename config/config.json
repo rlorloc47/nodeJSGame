@@ -1,0 +1,9 @@
+{
+    "development": {
+      "username": "bettereun47",
+      "password": "P@ssw0rd",
+      "database": "bettereun47",
+      "host": "bettereun47.cafe24.com",
+      "dialect": "mysql"
+    }
+  }

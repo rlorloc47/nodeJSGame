@@ -1,0 +1,78 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="rainGameWholeDiv">
+    <div class="rainGameDiv">
+        <!--<div class="rainDropText rainDrop_2" id='tomato'>나는야</div>
+        <div class="rainDropText rainDropCenter">멋쟁이</div>
+        <div class="rainDropText rainDropRight">토마토1</div>-->
+        <input type="text" class="rainInputDiv" onkeyup="endterKey(this)">
+    </div>
+    <div class="rainScoreDiv">
+        <table>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                
+            </tr>
+        </table>
+    </div>
+    <div class="clearDiv">
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type = "text/javascript">
+    //21.09.20 새로운 단어 등장
+    function newRainDropText(){
+        var rainDropText = document.createElement('Div');
+        rainDropText.className += ' rainDropText';
+
+        var randomNum = Math.floor(Math.random() * 5)+1;
+        rainDropText.className += ' rainDrop_'+randomNum;
+
+        $(".rainGameDiv").append(rainDropText);
+    }
+
+    //21.09.20 단어하단으로 이동
+    function moveDown(){
+        $(".rainDropText").each(function(){
+            var gridRowOri = Number($(this).css("grid-row-start"));
+            if(gridRowOri==9){
+                stopGame();
+            }
+            var gridRowMod = gridRowOri+1;
+            //21.09.20 css는 숫자로 변경 안되고 문자로 변경해야됨.
+            $(this).css('grid-row-start',String(gridRowMod));
+        });
+    }
+
+    //21.09.20 게임 멈춤 처리
+    function stopGame(){
+        clearInterval(rainingMotion);
+    }
+
+    //나는야 임의로 열어놓은 것 다시 닫아놔야 됨
+    $( document ).ready(function() {
+        //newRainDropText();
+    });
+    //나는야 임의로 막아놓은 것 다시 열어놔야 됨
+    var rainingMotion = setInterval(()=>{
+        moveDown();
+        newRainDropText();
+    },1000);
+
+    //21.09.20 엔터키 클릭 시
+    function endterKey(obj){
+        if (window.event.keyCode == 13) {
+            $(".rainDropText").each(function(){
+                console.log("나는야나는야:"+$(this).val());
+            });
+            console.log("나는야"+$(obj).val());
+        }
+    }
+</script>
+{% endblock %}
