@@ -25,7 +25,13 @@
 {% endblock %}
 
 {% block script %}
+<script src="/socket.io/socket.io.js"></script>
 <script type = "text/javascript">
+    
+    const socket = io.connect('http://localhost:8080/rain', {
+        path: '/socket.io'
+    });
+
     //21.09.20 새로운 단어 등장
     function newRainDropText(){
         var rainDropText = document.createElement('Div');
@@ -33,6 +39,12 @@
 
         var randomNum = Math.floor(Math.random() * 5)+1;
         rainDropText.className += ' rainDrop_'+randomNum;
+
+        //21.09.21 단어 불러오기 > pullNewRainCommand : 새로운단어출력요청 / pushNewRainCommand : 새로운단어출력동작
+        socket.emit('pullNewRainCommand');
+        socket.on("pushnewRainCommand", data => {
+            rainDropText.innerHTML = data;
+        });
 
         $(".rainGameDiv").append(rainDropText);
     }
