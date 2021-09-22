@@ -1,4 +1,6 @@
+const express = require('express');
 const SocketIO = require('socket.io');
+const Rain = require('./models/rain');
 const RainCommand = require('./models/rainCommand');
 
 module.exports = (server, app) => {
@@ -7,14 +9,26 @@ module.exports = (server, app) => {
   const rain = io.of('/rain');
 
   rain.on('connection', (socket) => {
-    //console.log('나는야 rain 네임스페이스에 접속');
+    //console.log('rain 네임스페이스에 접속');
     socket.on('disconnect', () => {
-      //console.log('나는야 rain 네임스페이스 접속 해제');
+      //console.log('rain 네임스페이스 접속 해제');
     });
-    socket.on("pullNewRainCommand",()=>{
-        const rainCommands = RainCommand.findOne({});
-        console.log("나는야"+rainCommands.command);
-        socket.emit('pushnewRainCommand',"단어");
+    socket.on("pullNewRainCommand",async ()=>{
+      var randomNum = Math.floor(Math.random() * await RainCommand.count({where:{del_flag:'N'}}))+1;
+      const newWord = await RainCommand.findAll({offset:randomNum,limit:1,where:{del_flag:'N'}});
+      //limit 1이기 때문에 [0] 사용해도 됨.
+      socket.emit('pushnewRainCommand',String(newWord[0].dataValues.command));
+    });
+    socket.on("updateScore",async (data)=>{
+      const values = ({sessionID:socket.id,score: data});
+      await Rain.findOne({where:{sessionID:socket.id}})
+      .then(function(obj) {
+      if(obj)
+        return obj.update(values);
+      else
+        return Rain.create(values);
+      })
+
     });
   });
 };

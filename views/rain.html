@@ -3,21 +3,10 @@
 {% block content %}
 <div class="rainGameWholeDiv">
     <div class="rainGameDiv">
-        <!--<div class="rainDropText rainDrop_2" id='tomato'>나는야</div>
-        <div class="rainDropText rainDropCenter">멋쟁이</div>
-        <div class="rainDropText rainDropRight">토마토1</div>-->
         <input type="text" class="rainInputDiv" onkeyup="endterKey(this)">
     </div>
     <div class="rainScoreDiv">
-        <table>
-            <tr>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                
-            </tr>
-        </table>
+        <input type="text" value="0" class="rainScoreOwn">
     </div>
     <div class="clearDiv">
     </div>
@@ -32,18 +21,21 @@
         path: '/socket.io'
     });
 
+    var idNum = 0;
     //21.09.20 새로운 단어 등장
     function newRainDropText(){
+        idNum = idNum + 1;
         var rainDropText = document.createElement('Div');
         rainDropText.className += ' rainDropText';
 
         var randomNum = Math.floor(Math.random() * 5)+1;
         rainDropText.className += ' rainDrop_'+randomNum;
+        rainDropText.id += 'rainDropID_'+idNum;
 
         //21.09.21 단어 불러오기 > pullNewRainCommand : 새로운단어출력요청 / pushNewRainCommand : 새로운단어출력동작
         socket.emit('pullNewRainCommand');
         socket.on("pushnewRainCommand", data => {
-            rainDropText.innerHTML = data;
+            $("#rainDropID_"+idNum).html(data);
         });
 
         $(".rainGameDiv").append(rainDropText);
@@ -64,26 +56,39 @@
 
     //21.09.20 게임 멈춤 처리
     function stopGame(){
+        //반복interval정지처리
         clearInterval(rainingMotion);
+        updateScoreFun();
     }
 
-    //나는야 임의로 열어놓은 것 다시 닫아놔야 됨
-    $( document ).ready(function() {
-        //newRainDropText();
-    });
-    //나는야 임의로 막아놓은 것 다시 열어놔야 됨
+    //21.09.21 점수 socket.emit 처리
+    function updateScoreFun(){
+        //score저장처리
+        var rainScoreOwn = $(".rainScoreOwn").val();
+        socket.emit("updateScore",rainScoreOwn);
+    }
+    
     var rainingMotion = setInterval(()=>{
         moveDown();
         newRainDropText();
-    },1000);
+    },500);
 
     //21.09.20 엔터키 클릭 시
     function endterKey(obj){
+        //엔터 클릭하였을 경우,
         if (window.event.keyCode == 13) {
             $(".rainDropText").each(function(){
-                console.log("나는야나는야:"+$(this).val());
+                if($(this).html()==$(obj).val()){
+                    //입력한 단어와 동일하게 입력하였을 경우, 해당 단어 삭제처리 및 점수 +1
+                    $(this).remove();
+                    var rainScoreOwn = $(".rainScoreOwn").val();
+                    $(".rainScoreOwn").val(Number(rainScoreOwn)+1);
+                    //하단을 추가해야지 동일한 단어가 등장하여도 하나만 삭제됨
+                    return false;
+                }
             });
-            //console.log("나는야"+$(obj).val());
+            $(obj).val("");
+            updateScoreFun();
         }
     }
 </script>
