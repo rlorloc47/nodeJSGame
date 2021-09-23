@@ -7,6 +7,12 @@
     </div>
     <div class="rainScoreDiv">
         <input type="text" value="0" class="rainScoreOwn">
+        <table class="rainScoreList">
+            <tr>
+                <td>등수</td>
+                <td>이름</td>
+            </tr>
+        </table>
     </div>
     <div class="clearDiv">
     </div>
@@ -66,6 +72,21 @@
         //score저장처리
         var rainScoreOwn = $(".rainScoreOwn").val();
         socket.emit("updateScore",rainScoreOwn);
+        socket.on("selectRainScoreList", data => {
+            //모두 등수 삭제 처리
+            $(".rainScoreList tbody tr").remove();
+            //등수 다시 등록 처리
+            for(scoreCell in data){
+                const tr = document.createElement("tr");
+                let td = document.createElement("td");
+                td.textContent = data[scoreCell].dataValues.id;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.textContent = data[scoreCell].dataValues.score;
+                tr.appendChild(td);
+                $(".rainScoreList tbody").append(tr);
+            }
+        });
     }
     
     var rainingMotion = setInterval(()=>{

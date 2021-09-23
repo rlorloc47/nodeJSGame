@@ -1,5 +1,7 @@
 const express = require('express');
 const SocketIO = require('socket.io');
+const fs = require("fs");
+
 const Rain = require('./models/rain');
 const RainCommand = require('./models/rainCommand');
 
@@ -14,7 +16,7 @@ module.exports = (server, app) => {
       //console.log('rain 네임스페이스 접속 해제');
     });
     socket.on("pullNewRainCommand",async ()=>{
-      var randomNum = Math.floor(Math.random() * await RainCommand.count({where:{del_flag:'N'}}))+1;
+      var randomNum = Math.floor(Math.random() * await RainCommand.count({where:{del_flag:'N'}}));
       const newWord = await RainCommand.findAll({offset:randomNum,limit:1,where:{del_flag:'N'}});
       //limit 1이기 때문에 [0] 사용해도 됨.
       socket.emit('pushnewRainCommand',String(newWord[0].dataValues.command));
@@ -23,12 +25,14 @@ module.exports = (server, app) => {
       const values = ({sessionID:socket.id,score: data});
       await Rain.findOne({where:{sessionID:socket.id}})
       .then(function(obj) {
-      if(obj)
-        return obj.update(values);
-      else
-        return Rain.create(values);
-      })
-
+        if(obj)
+          obj.update(values);
+        else
+          Rain.create(values);
+        });
+      const tomato = await Rain.findAll({where:{del_flag:'N'}});
+      //점수 리스트 출력
+      socket.emit('selectRainScoreList',tomato);
     });
   });
 };

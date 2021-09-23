@@ -10,6 +10,11 @@ module.exports = class Rain extends Sequelize.Model{
             score:{
                 type:Sequelize.INTEGER(100),
                 allowNull: true,
+            },
+            del_flag:{
+                type:Sequelize.CHAR(1),
+                allowNull: true,
+                defaultValue:'N',
             }
         },{
             sequelize,
