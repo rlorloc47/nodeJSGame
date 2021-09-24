@@ -7,6 +7,10 @@ module.exports = class Rain extends Sequelize.Model{
                 type:Sequelize.STRING(10),
                 allowNull: true,
             },
+            nickname:{
+                type:Sequelize.STRING(100),
+                allowNull: true,
+            },
             score:{
                 type:Sequelize.INTEGER(100),
                 allowNull: true,
