@@ -1,9 +1,14 @@
 const express = require('express');
 const RainCommand = require('../models/rainCommand');
 
+const passport = require('passport');
+const bcrypt = require('bcrypt');
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+const NickVo = require('../models/nickVo');
+
 const router = express.Router();
 
-router.get('/',async (req,res)=>{
+router.get('/',isNotLoggedIn, async (req,res)=>{
     //나는야 req.params.id 참고하기 위해 추가함
     //req.app.get('io').of('/').to(req.params.id).emit('tomato',req.params.id);
     
