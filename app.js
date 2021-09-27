@@ -34,6 +34,8 @@ sequelize.sync({force:false})
     console.error(err);
 });
 
+
+
 const sessionMiddleware = session({
     resave:false,
     saveUninitialized:false,
