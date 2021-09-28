@@ -8,6 +8,7 @@ module.exports = () => {
   passport.use(new LocalStrategy({
     nicknameField : 'nickname',
   }, async (nickname, done) => {
+    console.log("나는야 여기는 와");
     try {
       const exNickVo = await NickVo.findOne({ where: { nickname } });
       if (exNickVo) {

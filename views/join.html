@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <p>로그인페이지</p>
+
+    {% if nickUser %}
+        <p>나는야 로그인한 상태</p>
+    {% else %}
+        <form id="join-form" action="/login" method="post">
+            <input type="text" name="nickname">
+            <button value="로그인하기">로그인</button>
+        </form>
+        <form>
+            <input type="text" name="nickname">
+            <button value="일회성 회원가입하기">일회성 회원가입하기</button>
+        </form>
+    {% endif %}
+{% endblock %}
