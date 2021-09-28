@@ -13,7 +13,7 @@ dotenv.config();
 const webSocket = require('./socket');
 const indexRouter = require('./routers');
 const rainRouter = require('./routers/rain');
-const {sequelize} = require('./models');
+const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
 const app = express();
@@ -34,7 +34,7 @@ sequelize.sync({force:false})
     console.error(err);
 });
 
-const sessionMiddleware = session({
+/*const sessionMiddleware = session({
     resave:false,
     saveUninitialized:false,
     secret:process.env.COOKIE_SECRET,
@@ -42,16 +42,14 @@ const sessionMiddleware = session({
         httpOnly:true,
         secure:false,
     },
-});
-app.use(passport.initialize());
-app.use(passport.session());
+});*/
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname,'public')));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-/*app.use(session({
+app.use(session({
     resave:false,
     saveUninitialized:false,
     secret:process.env.COOKIE_SECRET,
@@ -59,8 +57,11 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
         httpOnly:true,
         secure:false,
     },
-}));*/
-app.use(sessionMiddleware);
+}));
+//app.use(sessionMiddleware);
+//나는야 확인용
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use((req,res,next)=>{
     if(!req.session.color){

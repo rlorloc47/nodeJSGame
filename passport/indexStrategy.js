@@ -6,9 +6,10 @@ const NickVo = require('../models/nickVo');
 
 module.exports = () => {
   passport.use(new LocalStrategy({
-    nicknameField : 'nickname',
-  }, async (nickname, done) => {
-    console.log("나는야 여기는 와");
+    usernameField: 'email',
+    passwordField: 'password',
+  }, async (email, password, done) => {
+    console.log("나ㅣ는ㅇ머니엄나");
     try {
       const exNickVo = await NickVo.findOne({ where: { nickname } });
       if (exNickVo) {
