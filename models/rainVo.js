@@ -3,10 +3,6 @@ const Sequelize = require('sequelize');
 module.exports = class Rain extends Sequelize.Model{
     static init(sequelize){
         return super.init({
-            sessionID:{
-                type:Sequelize.STRING(10),
-                allowNull: true,
-            },
             nickname:{
                 type:Sequelize.STRING(100),
                 allowNull: true,
@@ -24,8 +20,10 @@ module.exports = class Rain extends Sequelize.Model{
             sequelize,
             timestamps:true,
             underscored:false,
-            modelName:'Rain',
-            tableName:'Rain',
+            /*modelName:'Rain',
+            tableName:'Rain',*/
+            modelName:'rainVo',
+            tableName:'tb21_game_200_rain',
             paranoid:false,
             charset:'utf8',
         });

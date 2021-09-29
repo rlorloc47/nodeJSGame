@@ -3,11 +3,11 @@ const Sequelize = require('sequelize');
 module.exports = class nickVo extends Sequelize.Model{
     static init(sequelize){
         return super.init({
-            sessionID:{
-                type:Sequelize.STRING(10),
+            nickname:{
+                type:Sequelize.STRING(100),
                 allowNull: true,
             },
-            nickname:{
+            password:{
                 type:Sequelize.STRING(100),
                 allowNull: true,
             },
@@ -21,7 +21,7 @@ module.exports = class nickVo extends Sequelize.Model{
             timestamps:true,
             underscored:false,
             modelName:'nickVo',
-            tableName:'tb21_game_nickName',
+            tableName:'tb21_game_100_nickName',
             paranoid:false,
             charset:'utf8',
         });

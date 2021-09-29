@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <p>로그인페이지</p>
+
+    {% if user %}
+        <p>{{user.nickname}}님 로그인 완료되었습니다.</p>
+    {% else %}
+        <form id="loginFrm" action="/login" method="post">
+            <input type="text" name="nickname">
+            <input type="password" name="password">
+            <button value="로그인하기">로그인</button>
+        </form>
+        <form id="joinFrm" action="/join" method="post">
+            <input type="text" name="nickname">
+            <input type="password" name="password">
+            <button value="회원가입하기">회원가입하기</button>
+        </form>
+    {% endif %}
+{% endblock %}
+{% block script %}
+    <script type = "text/javascript">
+    $(document).ready(function(){
+      if (new URL(location.href).searchParams.get('error')) {
+        alert(new URL(location.href).searchParams.get('error'));
+      }
+    });
+    </script>
+{% endblock %}

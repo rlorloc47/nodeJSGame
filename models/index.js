@@ -3,7 +3,7 @@ const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config')[env];
 
 const RainCommand = require('./rainCommand');
-const Rain = require('./rain');
+const RainVo = require('./rainCommand');
 const nickVo = require('./nickVo');
 
 const db = {};
@@ -13,9 +13,9 @@ const sequelize = new Sequelize(
 
 db.sequelize = sequelize;
 
-db.Rain = Rain;
-Rain.init(sequelize);
-Rain.associate(db);
+db.RainVo = RainVo;
+RainVo.init(sequelize);
+RainVo.associate(db);
 
 db.RainCommand = RainCommand;
 RainCommand.init(sequelize);

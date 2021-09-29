@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+<!--21.09.29 rainGameDiv는 게임동작장소이기 때문에 시작버튼 클릭 전에는 안보임-->
 <div class="rainGameWholeDiv">
     <div class="rainGameDiv">
         <input type="text" class="rainInputDiv" onkeyup="endterKey(this)">
@@ -10,8 +11,10 @@
         <table class="rainScoreList">
         </table>
     </div>
-    <div class="clearDiv">
-    </div>
+    <div class="clearDiv"></div>
+</div>
+<div class="notRainGameWholeDiv">
+    <button onclick="startGame()">시작하기</button>
 </div>
 {% endblock %}
 
@@ -59,7 +62,7 @@
     //21.09.20 게임 멈춤 처리
     function stopGame(){
         //반복interval정지처리
-        clearInterval(rainingMotion);
+        clearInterval(interval);
         updateScoreFun();
     }
 
@@ -84,11 +87,6 @@
             }
         });
     }
-    
-    var rainingMotion = setInterval(()=>{
-        moveDown();
-        newRainDropText();
-    },500);
 
     //21.09.20 엔터키 클릭 시
     function endterKey(obj){
@@ -107,6 +105,26 @@
             $(obj).val("");
             updateScoreFun();
         }
+    }
+
+    /*var interval = setInterval(()=>{
+        moveDown();
+        newRainDropText();
+    },500);*/
+
+    function intervalFunction(){
+        var interval = setInterval(()=>{
+            moveDown();
+            newRainDropText();
+        },500);
+    }
+
+    //21.09.29 시작버튼 추가
+    function startGame(){
+        $(".rainGameWholeDiv").show();
+        $(".notRainGameWholeDiv").hide(); 
+        stopInterval = false;
+        intervalFunction();
     }
 </script>
 {% endblock %}

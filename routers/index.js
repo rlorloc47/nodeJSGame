@@ -4,49 +4,67 @@ const Room = require('../models/room');
 
 const passport = require('passport');
 const bcrypt = require('bcrypt');
-const NickUser = require('../models/nickVo');
-const nickVo = require('../models/nickVo');
 
 const { isNotLoggedIn } = require('./middlewares');
+const nickVo = require('../models/nickVo');
 
 const router = express.Router();
 
 //나는야 확인용
-router.use((req,res,next)=>{
-    console.log("나는야 확인용 : "+req.body.nickname);
-    res.locals.nickVo = req.nickVo;
-    res.locals.nickUser = req.nickUser;
-    res.locals.tomatochip = req.tomatochip;
-    console.log("나는야"+res.locals.nickVo);
-    console.log("나는야"+req.nickVo);
-
+router.use((req, res, next) => {
+    res.locals.user = req.user;
     next();
-});
+  });
 
 router.get('/',async (req,res)=>{
     //res.render('index',{title:'안내페이지'});
-    res.redirect("/rain");
+    res.redirect("/joinLogin");
 });
 
-router.get('/join',async (req,res)=>{
-    const {nick} = req.body;
-    console.log("나는야asdasd나는야asdasd"+nick);
-    res.render('join',{title:'로그인페이지'});
+router.get('/joinLogin',async (req,res)=>{
+    res.render('joinLogin',{title:'로그인회원가입페이지'});
 });
 
 router.post('/login',isNotLoggedIn,(req,res,next)=>{
-    console.log("나는야 여기가 시작"+NickUser.nickname);
-    const {nickname} = req.body;
-    nickVo.nickname = nickname;
-    console.log("나는야=-------------"+NickUser.nickname);
-    passport.authenticate('local',(authError,NickUser,info)=>{
-        //console.log("나는야"+NickUser);
-        console.log("나는야"+info.message);
-        if(authError){
+    passport.authenticate('local',(authError,nickUser,info)=>{
+        console.log("나는야::::::::"+authError);
+        if (authError) {
+            console.error(authError);
             return next(authError);
         }
-        console.log("나는야 여기가 끝");
+        console.log("나는야 nickUser : "+nickUser);
+        if (!nickUser) {
+            console.log("나는야 여기로 오는건가?");
+            return res.redirect(`/joinLogin?loginError=${info.message}`);
+        }
+        return req.login(nickUser, (loginError) => {
+            console.log("나는야 여기로 오는건가?2"+loginError);
+            if (loginError) {
+                console.error(loginError);
+                return next(loginError);
+            }
+            return res.redirect('/joinLogin');
+        });
     })(req,res,next);
+});
+
+router.post('/join',isNotLoggedIn,async (req,res,next)=>{
+    const { nickname, password } = req.body;
+    try{
+        const exNickVo = await nickVo.findOne({where : {nickname:nickname,del_flag:'N'}});
+        if(exNickVo){
+            return res.redirect('/joinLogin?error=이미 존재하는 닉네임입니다.');
+        }
+        const hash = await bcrypt.hash(password, 12);
+        await nickVo.create({
+            nickname,
+            password: hash,
+        });
+        return res.redirect('/joinLogin');
+    }catch(error){
+        console.log(error);
+        return next(error);
+    }
 });
 
 module.exports = router;
