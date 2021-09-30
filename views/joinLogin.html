@@ -1,20 +1,24 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <p>로그인페이지</p>
+    <h3>로그인 페이지</h3>
 
     {% if user %}
         <p>{{user.nickname}}님 로그인 완료되었습니다.</p>
+        <button class="btn redBtn" value="로그아웃하기" onclick="location.href='/logout'">로그아웃하기</button>
     {% else %}
+        <h5>로그인</h5>
         <form id="loginFrm" action="/login" method="post">
-            <input type="text" name="nickname">
-            <input type="password" name="password">
-            <button value="로그인하기">로그인</button>
+            <input type="text" name="nickname" placeholder="닉네임">
+            <input type="password" name="password" placeholder="비밀번호">
+            <button class="btn redBtn" value="로그인하기">로그인</button>
         </form>
+        <hr>
+        <h5>회원가입</h5>
         <form id="joinFrm" action="/join" method="post">
-            <input type="text" name="nickname">
-            <input type="password" name="password">
-            <button value="회원가입하기">회원가입하기</button>
+            <input type="text" name="nickname" placeholder="닉네임">
+            <input type="password" name="password" placeholder="비밀번호">
+            <button class="btn yellowBtn" value="회원가입하기">회원가입하기</button>
         </form>
     {% endif %}
 {% endblock %}

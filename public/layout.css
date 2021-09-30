@@ -17,7 +17,7 @@
 }
 
 /*21.09.20 레인게임작동*/
-.rainGameWholeDiv, .notRainGameWholeDiv{
+.rainGameWholeDiv, .beforeRainGameWholeDiv .afterRainGameWholeDiv{
     width: 100%;
     height: 100%;
 }
@@ -67,4 +67,41 @@
     grid-column: 5;
     grid-row-start: 1;
     background-color:blueviolet;
+}
+
+/*21.09.30 버튼*/
+#startBtn{
+    width: 200px;
+    height: 50px;
+    margin: 0 auto;
+    display: block;
+}
+
+.btn{
+    width: 100px;
+    height: 30px;
+    border: 0px;
+    border-radius: 30px;
+}
+.redBtn{
+    background-color: #f97e7e;
+    color: white;
+}
+.yellowBtn{
+    background-color: #b9e75c;
+    color: #424242;
+}
+
+/*21.09.30 테이블*/
+.tble{
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+.tble td {
+    border: 1px solid black;
+}
+
+.rainScoreOwn{
+    border: 0px;
+    width: 20px;
 }

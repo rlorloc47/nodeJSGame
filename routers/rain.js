@@ -13,8 +13,4 @@ router.get('/',isLoggedIn, async (req,res)=>{
     res.render('rain',{title:'레인게임'});
 });
 
-router.get('/rainBefore',isLoggedIn, async (req,res)=>{
-    res.render('rainBefore',{title:'레인게임대기화면'});
-});
-
 module.exports = router;

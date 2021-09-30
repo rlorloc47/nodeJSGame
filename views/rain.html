@@ -2,26 +2,33 @@
 
 {% block content %}
 <!--21.09.29 rainGameDiv는 게임동작장소이기 때문에 시작버튼 클릭 전에는 안보임-->
-<div class="rainGameWholeDiv">
+<div class="rainGameWholeDiv" style="display: none;">
     <div class="rainGameDiv">
         <input type="text" class="rainInputDiv" onkeyup="endterKey(this)">
     </div>
     <div class="rainScoreDiv">
-        <input type="text" value="0" class="rainScoreOwn">
-        <table class="rainScoreList">
+        점수는 : <input type="text" value="0" class="rainScoreOwn" readonly>점
+        <table class="rainScoreList tble">
+            <tbody>
+                <tr>
+                    <td>등수</td>
+                    <td>닉네임</td>
+                    <td>점수</td>
+                </tr>
+            </tbody>
         </table>
     </div>
     <div class="clearDiv"></div>
 </div>
-<div class="notRainGameWholeDiv">
-    <button onclick="startGame()">시작하기</button>
+<!--21.09.29 게임 시작 전 대기화면-->
+<div class="beforeRainGameWholeDiv">
+    <button id="startBtn" onclick="startGame()">시작하기</button>
 </div>
 {% endblock %}
 
 {% block script %}
 <script src="/socket.io/socket.io.js"></script>
 <script type = "text/javascript">
-    
     const socket = io.connect('http://localhost:8080/rain', {
         path: '/socket.io'
     });
@@ -63,26 +70,51 @@
     function stopGame(){
         //반복interval정지처리
         clearInterval(interval);
-        updateScoreFun();
+        //updateScoreFun();
+
+        //21.09.30 입력 text 잠금
+        var result = confirm("다시 게임을 진행하시나요?");
+        if(result){
+            window.location.reload();
+        }
+        
+        $(".rainInputDiv").attr("readonly",true);
     }
 
     //21.09.21 점수 socket.emit 처리
     function updateScoreFun(){
         //score저장처리
         var rainScoreOwn = $(".rainScoreOwn").val();
-        socket.emit("updateScore",rainScoreOwn);
+        var nickname = "{{user.nickname}}";
+        socket.emit("updateScore",{rainScoreOwn:rainScoreOwn,nickname:nickname});
         socket.on("selectRainScoreList", data => {
             //모두 등수 삭제 처리
-            $(".rainScoreList tbody tr").remove();
+            $('.rainScoreList tr:not(:first)').remove();
+            //$(".rainScoreList tbody tr").remove();
             //등수 다시 등록 처리
+            var scoreIndex = 0; //21.10.01 index처리
             for(scoreCell in data){
+                //21.09.30 닉네임 arraybuffer에서 string으로 변환
+                var buf = data[scoreCell].dataValues.nickname;
+                var arrayBuffer = new Uint8Array(buf);
+                var s = String.fromCharCode.apply(null, arrayBuffer);
+                var nickname = decodeURIComponent(s);
+
                 const tr = document.createElement("tr");
+
+                scoreIndex++;
                 let td = document.createElement("td");
-                td.textContent = data[scoreCell].dataValues.id;
+                td.textContent = scoreIndex;
                 tr.appendChild(td);
+
+                td = document.createElement("td");
+                td.textContent = nickname;
+                tr.appendChild(td);
+
                 td = document.createElement("td");
                 td.textContent = data[scoreCell].dataValues.score;
                 tr.appendChild(td);
+
                 $(".rainScoreList tbody").append(tr);
             }
         });
@@ -107,24 +139,24 @@
         }
     }
 
-    /*var interval = setInterval(()=>{
+    //21.09.30 "시작" 버튼 클릭 시 시작하게 변경 >> clearInterval로 바로 막음
+    var interval = setInterval(()=>{
         moveDown();
         newRainDropText();
-    },500);*/
-
-    function intervalFunction(){
-        var interval = setInterval(()=>{
-            moveDown();
-            newRainDropText();
-        },500);
-    }
+    },500);
+    clearInterval(interval);
 
     //21.09.29 시작버튼 추가
     function startGame(){
+        //게임대기화면 없애고 게임화면 보여주기
         $(".rainGameWholeDiv").show();
-        $(".notRainGameWholeDiv").hide(); 
-        stopInterval = false;
-        intervalFunction();
+        $(".beforeRainGameWholeDiv").hide();
+        
+        //단어 출력 반복
+        interval = setInterval(()=>{
+            moveDown();
+            newRainDropText();
+        },500);
     }
 </script>
 {% endblock %}

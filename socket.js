@@ -11,7 +11,7 @@ module.exports = (server, app) => {
   const rain = io.of('/rain');
 
   rain.on('connection', (socket) => {
-    console.log('rain 네임스페이스에 접속');
+    //console.log('rain 네임스페이스에 접속');
     socket.on('disconnect', () => {
       //console.log('rain 네임스페이스 접속 해제');
     });
@@ -22,15 +22,16 @@ module.exports = (server, app) => {
       socket.emit('pushnewRainCommand',String(newWord[0].dataValues.command));
     });
     socket.on("updateScore",async (data)=>{
-      const values = ({sessionID:socket.id,score: data});
-      await RainVo.findOne({where:{sessionID:socket.id}})
-      .then(function(obj) {
+      const values = ({nickname:data.nickname,score: data.rainScoreOwn});
+      await RainVo.findOne({ where: { nickname : data.nickname } })
+      .then(async function(obj) {
         if(obj)
-          obj.update(values);
+          await obj.update(values);
         else
-        RainVo.create(values);
+          await RainVo.create(values);
         });
-      const tomato = await RainVo.findAll({where:{del_flag:'N'}});
+      //const tomato = await RainVo.findAll({where:{del_flag:'N'}});
+      const tomato = await RainVo.findAll({where:{del_flag:'N'},order:[['score', 'DESC']]});
       //점수 리스트 출력
       socket.emit('selectRainScoreList',tomato);
     });

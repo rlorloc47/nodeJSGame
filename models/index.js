@@ -3,7 +3,7 @@ const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config')[env];
 
 const RainCommand = require('./rainCommand');
-const RainVo = require('./rainCommand');
+const RainVo = require('./rainVo');
 const nickVo = require('./nickVo');
 
 const db = {};

@@ -5,12 +5,11 @@ const Room = require('../models/room');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 
-const { isNotLoggedIn } = require('./middlewares');
+const { isNotLoggedIn, isLoggedIn } = require('./middlewares');
 const nickVo = require('../models/nickVo');
 
 const router = express.Router();
 
-//나는야 확인용
 router.use((req, res, next) => {
     res.locals.user = req.user;
     next();
@@ -65,6 +64,13 @@ router.post('/join',isNotLoggedIn,async (req,res,next)=>{
         console.log(error);
         return next(error);
     }
+});
+
+//21.09.30 로그아웃버튼
+router.get('/logout',isLoggedIn,async(req,res)=>{
+    req.logout();
+    req.session.destroy();
+    res.redirect('/joinLogin');
 });
 
 module.exports = router;
