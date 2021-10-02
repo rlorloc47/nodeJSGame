@@ -26,12 +26,10 @@ router.get('/joinLogin',async (req,res)=>{
 
 router.post('/login',isNotLoggedIn,(req,res,next)=>{
     passport.authenticate('local',(authError,nickUser,info)=>{
-        console.log("나는야::::::::"+authError);
         if (authError) {
             console.error(authError);
             return next(authError);
         }
-        console.log("나는야 nickUser : "+nickUser);
         if (!nickUser) {
             console.log("나는야 여기로 오는건가?");
             return res.redirect(`/joinLogin?loginError=${info.message}`);

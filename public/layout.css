@@ -39,34 +39,34 @@
     float: right;
 }
 .rainDropText{
-    border: 1px solid pink;
-    box-sizing: border-box;
+    border: 0px;
+    color: white;
 }
 
 .rainDrop_1{
     grid-column: 1;
     grid-row-start: 1;
-    background-color: red;
+    background-color: #ed8989;
 }
 .rainDrop_2{
     grid-column: 2;
     grid-row-start: 1;
-    background-color: aqua;
+    background-color: #ffa500;
 }
 .rainDrop_3{
     grid-column: 3;
     grid-row-start: 1;
-    background-color: aquamarine;
+    background-color: #9fed89;
 }
 .rainDrop_4{
     grid-column: 4;
     grid-row-start: 1;
-    background-color: bisque;
+    background-color: #89a5ed;
 }
 .rainDrop_5{
     grid-column: 5;
     grid-row-start: 1;
-    background-color:blueviolet;
+    background-color:#c589ed;
 }
 
 /*21.09.30 버튼*/
