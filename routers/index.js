@@ -1,6 +1,4 @@
 const express = require('express');
-const RainCommand = require('../models/rainCommand');
-const Room = require('../models/room');
 
 const passport = require('passport');
 const bcrypt = require('bcrypt');

@@ -13,6 +13,8 @@ dotenv.config();
 const webSocket = require('./socket');
 const indexRouter = require('./routers');
 const rainRouter = require('./routers/rain');
+const bingoRouter = require('./routers/bingo');
+
 const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
@@ -73,6 +75,7 @@ app.use((req,res,next)=>{
 
 app.use('/',indexRouter);
 app.use('/rain',rainRouter);
+app.use('/bingo',bingoRouter);
 
 app.use((req, res, next) => {
     const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
