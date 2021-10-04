@@ -4,3 +4,42 @@
     <div class="beforeBingoDiv">게임시작전</div>
     <div class="bingoDiv">게임시작후</div>
 {% endblock %}
+
+{% block script %}
+<script src="/socket.io/socket.io.js"></script>
+<script type = "text/javascript">
+    const socket = io.connect('http://localhost:8080/bingo', {
+        path: '/socket.io'
+    });
+
+    socket.on("getBingoCommandList", data => {
+        for(bingoCommandList in data){
+            var buf = data[bingoCommandList].dataValues.bingoCommand;
+            var arrayBuffer = new Uint8Array(buf);
+            var enc = new TextDecoder("utf-8");
+            var arr = new Uint8Array(arrayBuffer);
+            var bingoCommand = enc.decode(arr);
+
+            var bingoDescCodebuf = data[bingoCommandList].dataValues.bingoDescCode;
+            var arrayBuffer = new Uint8Array(bingoDescCodebuf);
+            var enc = new TextDecoder("utf-8");
+            var arr = new Uint8Array(arrayBuffer);
+            var bingoDescCode = enc.decode(arr);
+
+            var p = document.createElement("p");
+            p.onclick = function(){
+                startbingoGame(bingoDescCode);
+            }
+            p.textContent = bingoCommand;
+
+            $(".beforeBingoDiv").append(p);
+        }
+    });
+
+    //21.10.05 특정 단어 클릭 시
+    function startbingoGame(bingoDescCode){
+        console.log("나는야"+bingoDescCode);
+        
+    }
+    </script>
+{% endblock %}

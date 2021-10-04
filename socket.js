@@ -5,6 +5,8 @@ const fs = require("fs");
 const RainVo = require('./models/rainVo');
 const RainCommand = require('./models/rainCommand');
 
+const bingoCommandVo = require('./models/bingoCommandVo');
+
 module.exports = (server, app) => {
   const io = SocketIO(server, { path: '/socket.io' });
   app.set('io', io);
@@ -36,4 +38,16 @@ module.exports = (server, app) => {
       socket.emit('selectRainScoreList',tomato);
     });
   });
+
+  
+  const bingo = io.of('/bingo');
+  bingo.on('connection', async (socket) => {
+    console.log('bingo 네임스페이스에 접속');
+    const bingoCommandDistinctList = await bingoCommandVo.findAll({where:{del_flag:'N'},group:['bingoDesc']});
+    socket.emit('getBingoCommandList',bingoCommandDistinctList);
+    socket.on('disconnect', () => {
+      //console.log('bingo 네임스페이스 접속 해제');
+    });
+  });
+
 };

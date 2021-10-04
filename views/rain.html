@@ -90,15 +90,19 @@
         socket.on("selectRainScoreList", data => {
             //모두 등수 삭제 처리
             $('.rainScoreList tr:not(:first)').remove();
-            //$(".rainScoreList tbody tr").remove();
+            
             //등수 다시 등록 처리
             var scoreIndex = 0; //21.10.01 index처리
             for(scoreCell in data){
                 //21.09.30 닉네임 arraybuffer에서 string으로 변환
                 var buf = data[scoreCell].dataValues.nickname;
                 var arrayBuffer = new Uint8Array(buf);
-                var s = String.fromCharCode.apply(null, arrayBuffer);
-                var nickname = decodeURIComponent(s);
+                //21.10.05 한글깨짐
+                /*var s = String.fromCharCode.apply(null, arrayBuffer);
+                var nickname = decodeURIComponent(s);*/
+                var enc = new TextDecoder("utf-8");
+                var arr = new Uint8Array(arrayBuffer);
+                var nickname = enc.decode(arr);
 
                 const tr = document.createElement("tr");
 
