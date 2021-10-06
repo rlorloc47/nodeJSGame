@@ -48,6 +48,11 @@ module.exports = (server, app) => {
     socket.on('disconnect', () => {
       //console.log('bingo 네임스페이스 접속 해제');
     });
+    socket.on('checkBingoDesc',async (data)=>{
+      console.log("나는야"+data);
+      var bingoCommandList = await bingoCommandVo.findAll({where:{del_flag:'N',bingoCommand:data}});
+      socket.emit('pushNewBingoCommand',bingoCommandList);
+    });
   });
 
 };

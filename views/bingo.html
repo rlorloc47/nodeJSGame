@@ -27,9 +27,10 @@
             var bingoDescCode = enc.decode(arr);
 
             var p = document.createElement("p");
-            p.onclick = function(){
+            /*p.onclick = function(){
                 startbingoGame(bingoDescCode);
-            }
+            }*/
+            p.addEventListener("focus", function(){alert("나는야")});
             p.textContent = bingoCommand;
 
             $(".beforeBingoDiv").append(p);
@@ -38,7 +39,10 @@
 
     //21.10.05 특정 단어 클릭 시
     function startbingoGame(bingoDescCode){
-        console.log("나는야나는야 "+bingoDescCode);
+        socket.emit('checkBingoDesc',bingoDescCode);
+        socket.on("pushnewRainCommand", data => {
+            $("#rainDropID_"+idNum).html(data);
+        });
         
     }
     </script>
