@@ -2,7 +2,9 @@
 
 {% block content %}
     <div class="beforeBingoDiv">게임시작전</div>
-    <div class="bingoDiv">게임시작후</div>
+    <div class="bingoDiv">
+        <div class="commandDiv"></div>
+    </div>
 {% endblock %}
 
 {% block script %}
@@ -30,7 +32,8 @@
             /*p.onclick = function(){
                 startbingoGame(bingoDescCode);
             }*/
-            p.addEventListener("focus", function(){alert("나는야")});
+            //p.onclick = startbingoGame(bingoDescCode);
+            p.addEventListener("click", function(){startbingoGame(bingoDescCode)});
             p.textContent = bingoCommand;
 
             $(".beforeBingoDiv").append(p);
@@ -40,8 +43,19 @@
     //21.10.05 특정 단어 클릭 시
     function startbingoGame(bingoDescCode){
         socket.emit('checkBingoDesc',bingoDescCode);
-        socket.on("pushnewRainCommand", data => {
-            $("#rainDropID_"+idNum).html(data);
+        socket.on("pushNewBingoCommand", data => {
+            console.log("나는야"+data);
+            for(commandCell in data){
+                var buf = data[commandCell].dataValues.bingoCommand;
+                var arrayBuffer = new Uint8Array(buf);
+                //21.10.05 한글깨짐
+                /*var s = String.fromCharCode.apply(null, arrayBuffer);
+                var nickname = decodeURIComponent(s);*/
+                var enc = new TextDecoder("utf-8");
+                var arr = new Uint8Array(arrayBuffer);
+                var bingoCommand = enc.decode(arr);
+                $(".commandDiv").append(bingoCommand);
+            }
         });
         
     }
